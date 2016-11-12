@@ -22,6 +22,7 @@ class Relu(Layer):
 
     def forward(self, inputs):
         # Your codes here
+        return T.nnet.relu(inputs=inputs)
 
 
 class Softmax(Layer):
@@ -30,6 +31,7 @@ class Softmax(Layer):
 
     def forward(self, inputs):
         # Your codes here
+        return T.nnet.softmax(inputs)
 
 
 class Linear(Layer):
@@ -40,6 +42,7 @@ class Linear(Layer):
 
     def forward(self, inputs):
         # Your codes here
+        return T.dot(T.flatten(inputs, outdim=2), self.W) + self.b
 
     def params(self):
         return [self.W, self.b]
@@ -96,6 +99,7 @@ class LSTM(Layer):
         super(LSTM, self).__init__(name, trainable=True)
         self.hidden_dim = hidden_dim
         # Your codes here, do weights initilization
+        pass
 
     def forward(self, inputs):
         results, _ = theano.scan(
@@ -113,7 +117,9 @@ class LSTM(Layer):
             c_t_prev: cell states at previous timestamp
         """
         # Your codes here
+        pass
 
     def params(self):
         # Your codes here
+        pass
 

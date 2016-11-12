@@ -29,4 +29,5 @@ class RMSpropOptimizer(object):
 
     def get_updates(self, cost, params):
         # Your codes here
+        pass
 
