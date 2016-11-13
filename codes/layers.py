@@ -99,6 +99,21 @@ class LSTM(Layer):
         super(LSTM, self).__init__(name, trainable=True)
         self.hidden_dim = hidden_dim
         # Your codes here, do weights initilization
+        self.Wi = sharedX(np.random.randn(input_dim, hidden_dim) * init_std, name=name + '/Wi')
+        self.Ui = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + '/Ui')
+        self.Vi = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + 'Vi')
+        self.Wf = sharedX(np.random.randn(input_dim, hidden_dim) * init_std, name=name + '/Wf')
+        self.Uf = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + '/Uf')
+        self.Vf = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + 'Vf')
+        self.Wo = sharedX(np.random.randn(input_dim, hidden_dim) * init_std, name=name + '/Wo')
+        self.Uo = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + '/Uo')
+        self.Vo = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + 'Vo')
+        self.Wc = sharedX(np.random.randn(input_dim, hidden_dim) * init_std, name=name + '/Wc')
+        self.Uc = sharedX(np.random.randn(hidden_dim, hidden_dim) * init_std, name=name + '/Uc')
+        self.bi = sharedX(np.zeros(hidden_dim), name=name + '/bi')
+        self.bf = sharedX(np.zeros(hidden_dim), name=name + '/bf')
+        self.bo = sharedX(np.zeros(hidden_dim), name=name + '/bo')
+        self.bc = sharedX(np.zeros(hidden_dim), name=name + '/bc')
         pass
 
     def forward(self, inputs):
@@ -117,9 +132,15 @@ class LSTM(Layer):
             c_t_prev: cell states at previous timestamp
         """
         # Your codes here
-        pass
+        i_t = T.nnet.sigmoid(T.dot(x_t, self.Wi) + T.dot(h_t_prev, self.Ui) + T.dot(c_t_prev, self.Vi) + self.bi)
+        f_t = T.nnet.sigmoid(T.dot(x_t, self.Wf) + T.dot(h_t_prev, self.Uf) + T.dot(c_t_prev, self.Vf) + self.bf)
+        o_t = T.nnet.sigmoid(T.dot(x_t, self.Wo) + T.dot(h_t_prev, self.Uo) + T.dot(c_t_prev, self.Vo) + self.bo)
+        c_tmp = T.tanh(T.dot(x_t, self.Wc) + T.dot(h_t_prev, self.Uc) + self.bc)
+        c_t = f_t * c_t_prev + i_t * c_tmp
+        h_t = o_t * T.tanh(c_t)
+        return [h_t, h_t, c_t]
 
     def params(self):
         # Your codes here
-        pass
+        return [self.Wi, self.Ui, self.Vi, self.bi, self.Wf, self.Uf, self.Vf, self.bf, self.Wo, self.Uo, self.Vo, self.bo, self.Wc, self.Uc, self.bc]
 
